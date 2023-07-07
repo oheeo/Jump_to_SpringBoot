@@ -3,13 +3,9 @@ package com.mysite.sbb.question;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToOne;
+import com.mysite.sbb.user.SiteUser;
+import jakarta.persistence.*;
 
 import com.mysite.sbb.answer.Answer;
 import lombok.Getter;
@@ -49,4 +45,10 @@ public class Question {
     // cascade = CascadeType.REMOVE 질문을 삭제하면 그에 달린 답변들도 모두 삭제하기 위해
     // Answer 엔티티 객체로 구성된 answerList 속성을 추가함
     // 질문 객체(예:question)에서 답변을 참조하려면 question.getAnswerList()
+
+    @ManyToOne
+    private SiteUser author;  //  Question과 Answer 엔티티에 "글쓴이" 항목
+
+    private LocalDateTime modifyDate;  // 질문이나 답변 수정 일시
+    
 }

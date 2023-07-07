@@ -1,9 +1,12 @@
 package com.mysite.sbb.user;
 
+import com.mysite.sbb.DataNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -20,6 +23,17 @@ public class UserService {
         this.userRepository.save(user);
         return user;
     }
+
+    public SiteUser getUser(String username) {
+        Optional<SiteUser> siteUser = this.userRepository.findByusername(username);
+        if (siteUser.isPresent()) {
+            return siteUser.get();
+        } else {
+            throw new DataNotFoundException("siteuser not found");
+        }
+    }
+    // User 서비스를 통해 SiteUser를 조회할 수 있는 getUser 메서드
+
 }
 //  User 데이터를 생성하는 create 메서드를 추가
 //  사용자의 비밀번호는 보안을 위해 반드시 암호화하여 저장

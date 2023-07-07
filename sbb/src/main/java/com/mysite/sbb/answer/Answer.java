@@ -2,6 +2,7 @@ package com.mysite.sbb.answer;
 
 import java.time.LocalDateTime;
 
+import com.mysite.sbb.user.SiteUser;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -37,4 +38,10 @@ public class Answer {
     // 답변은 하나의 질문에 여러개가 달릴 수 있다. 따라서 답변은 Many, 질문은 One
     // 부모는 Question, 자식은 Answer
     // 답변 객체(예:answer)를 통해 질문 객체의 제목을 알고 싶다면 answer.getQuestion().getSubject()
+
+    @ManyToOne
+    private SiteUser author;  //  Question과 Answer 엔티티에 "글쓴이" 항목
+
+    private LocalDateTime modifyDate;  // 질문이나 답변 수정 일시
+
 }
