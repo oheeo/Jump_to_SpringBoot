@@ -2,6 +2,8 @@ package com.mysite.sbb.question;
 
 import com.mysite.sbb.answer.AnswerForm;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -11,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import org.springframework.validation.BindingResult;
 
 import java.util.List;
@@ -28,11 +30,13 @@ public class QuestionController {
 
     @GetMapping("/list")
 //    @ResponseBody  // 템플릿을 사용하기에 @ResponseBody 필요 없음
-    public String list(Model model) {
-    // Model 객체는 자바 클래스와 템플릿 간의 연결고리 역할 (Model 객체에 값을 담아두면 템플릿에서 그 값을 사용할 수 있다)
-        List<Question> questionList = this.questionService.getList();
-
-        model.addAttribute("questionList", questionList);
+    public String list(Model model, @RequestParam(value="page", defaultValue="0") int page) {
+        // Model 객체는 자바 클래스와 템플릿 간의 연결고리 역할 (Model 객체에 값을 담아두면 템플릿에서 그 값을 사용할 수 있다)
+        // @RequestParam(value="page", defaultValue="0") int page
+        // : http://localhost:8080/question/list?page=0 처럼 GET 방식으로 요청된 URL에서 page값을 가져오기 위해
+        // URL에 페이지 파라미터 page가 전달되지 않은 경우 디폴트 값으로 0
+        Page<Question> paging = this.questionService.getList(page);
+        model.addAttribute("paging", paging);
         return "question_list";  // list 메서드에서 question_list.html 템플릿 파일의 이름인 "question_list"를 리턴
     }
 
