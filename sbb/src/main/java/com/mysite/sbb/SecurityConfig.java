@@ -2,6 +2,8 @@ package com.mysite.sbb;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -25,11 +27,19 @@ public class SecurityConfig {
                 .addHeaderWriter(new XFrameOptionsHeaderWriter(
                         XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN))
 
-//        로그인 구현 (스프링 시큐리티의 로그인 설정 담당)
+                // 로그인 구현 (스프링 시큐리티의 로그인 설정 담당)
                 .and()
                     .formLogin()
                     .loginPage("/user/login")  // 로그인 페이지 URL
                     .defaultSuccessUrl("/")  // 성공시 이동하는 디폴트 페이지는 루트 URL
+
+                // 로그아웃 구현
+                .and()
+                    .logout()
+                    .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
+                    .logoutSuccessUrl("/")
+                    .invalidateHttpSession(true)
+
                 ;
 
         return http.build();
@@ -39,4 +49,14 @@ public class SecurityConfig {
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+    @Bean
+    AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+        throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
+    // AuthenticationManager 빈 생성
+    // AuthenticationManager : 스프링 시큐리티의 인증을 담당
+    // 사용자 인증시 앞에서 작성한 UserSecurityService와 PasswordEncoder를 사용
+
 }
