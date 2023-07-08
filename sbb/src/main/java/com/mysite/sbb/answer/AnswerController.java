@@ -5,15 +5,16 @@ import com.mysite.sbb.question.QuestionService;
 import com.mysite.sbb.user.SiteUser;
 import com.mysite.sbb.user.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.security.Principal;
 
@@ -45,5 +46,52 @@ public class AnswerController {
         this.answerService.create(question, answerForm.getContent(), siteUser);
         return String.format("redirect:/question/detail/%s", id);
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/modify/{id}")
+    public String answerModify(AnswerForm answerForm, @PathVariable("id") Integer id, Principal principal) {
+        Answer answer = this.answerService.getAnswer(id);
+        if (!answer.getAuthor().getUsername().equals(principal.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
+        }
+        answerForm.setContent(answer.getContent());
+        return "answer_form";
+    }
+    // URL의 답변 아이디를 통해 조회한 답변 데이터의 "내용"을
+    // AnswerForm 객체에 대입하여 answer_form.html 템플릿에서 사용할수 있도록 함
+    // answer_form.html은 답변을 수정하기 위한 템플릿으로 신규로 작성
+    // 답변 수정시 기존의 내용이 필요하므로 AnswerForm 객체에 조회한 값을 저장해야 함
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/modify/{id}")
+    public String answerModify(@Valid AnswerForm answerForm, BindingResult bindingResult,
+                               @PathVariable("id") Integer id, Principal principal) {
+        if (bindingResult.hasErrors()) {
+            return "answer_form";
+        }
+        Answer answer = this.answerService.getAnswer(id);
+        if (!answer.getAuthor().getUsername().equals(principal.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
+        }
+        this.answerService.modify(answer, answerForm.getContent());
+        return String.format("redirect:/question/detail/%s", answer.getQuestion().getId());
+    }
+    // 폼을 통해 요청되는 POST방식의 /answer/modify/답변ID 형태의 URL을 처리하기 위해
+    // POST 방식의 답변 수정을 처리하는 answerModify 메서드를 추가
+    // 답변 수정을 완료한 후에는 질문 상세 페이지로 돌아가기 위해 answer.getQuestion.getId()로 질문의 아이디를 가져옴
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/delete/{id}")
+    public String answerDelete(Principal principal, @PathVariable("id") Integer id) {
+        Answer answer = this.answerService.getAnswer(id);
+        if (!answer.getAuthor().getUsername().equals(principal.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
+        }
+        this.answerService.delete(answer);
+        return String.format("redirect:/question/detail/%s", answer.getQuestion().getId());
+    }
+    // 답변 삭제 버튼을 누르면 요청되는 GET방식의 /answer/delete/답변ID 형태의 URL을 처리하기 위해
+    // 답변을 삭제하는 answerDelete 메서드
+    // 답변을 삭제한 후에는 해당 답변이 있던 질문상세 화면으로 리다이렉트
 
 }
