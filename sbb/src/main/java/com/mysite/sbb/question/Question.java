@@ -2,8 +2,11 @@ package com.mysite.sbb.question;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToMany;
 import com.mysite.sbb.user.SiteUser;
 import jakarta.persistence.*;
 
@@ -50,5 +53,11 @@ public class Question {
     private SiteUser author;  //  Question과 Answer 엔티티에 "글쓴이" 항목
 
     private LocalDateTime modifyDate;  // 질문이나 답변 수정 일시
-    
+
+    @ManyToMany
+    // 질문과 추천인은 부모와 자식의 관계가 아니고 대등한 관계이기 때문에 @ManyToMany (하나의 질문에 여러사람이 추천할 수 있고 한 사람이 여러 개의 질문을 추천할 수 있다)
+    Set<SiteUser> voter;
+    // Set<SiteUser> voter : List가 아닌 Set으로 한 이유는 추천인(voter)은 중복되면 안 되기 때문
+
+
 }

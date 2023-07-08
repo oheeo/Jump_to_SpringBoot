@@ -94,4 +94,17 @@ public class AnswerController {
     // 답변을 삭제하는 answerDelete 메서드
     // 답변을 삭제한 후에는 해당 답변이 있던 질문상세 화면으로 리다이렉트
 
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/vote/{id}")
+    public String answerVote(Principal principal, @PathVariable("id") Integer id) {
+        Answer answer = this.answerService.getAnswer(id);
+        SiteUser siteUser = this.userService.getUser(principal.getName());
+        this.answerService.vote(answer, siteUser);
+        return String.format("redirect:/question/detail/%s", answer.getQuestion().getId());
+    }
+    // 답변 추천 버튼을 눌렀을때 호출되는 URL을 처리하기 위해
+    // 추천은 로그인한 사람만 가능해야 하므로 @PreAuthorize("isAuthenticated()") 애너테이션이 적용
+    // AnswerService의 vote 메서드를 호출하여 추천인을 저장
+    // 오류가 없다면 질문 상세화면으로 리다이렉트
+
 }

@@ -1,3 +1,4 @@
+<!-- 질문 상세 화면 템플릿 -->
 <!-- <link rel="stylesheet" type="text/css" th:href="@{/bootstrap.min.css}"> -->
 <html layout:decorate="~{layout}">
 <div layout:fragment="content" class="container my-3">
@@ -7,6 +8,13 @@
     <div class="card-body">
       <div class="card-text" style="white-space: pre-line;" th:text="${question.content}"></div>
       <div class="d-flex justify-content-end">
+
+        <div th:if="${question.modifyDate != null}" class="badge bg-light text-dark p-2 text-start mx-3">
+          <div class="mb-2">modified at</div>
+          <div th:text="${#temporals.format(question.modifyDate, 'yyyy-MM-dd HH:mm')}"></div>
+        </div>
+        <!-- 질문 상세 화면에서 질문 수정일시 확인 (작성일시 왼쪽에 수정일시 추가) -->
+
         <div class="badge bg-light text-dark p-2 text-start">
           <div class="mb-2">
             <span th:if="${question.author != null}" th:text="${question.author.username}"></span>
@@ -15,6 +23,16 @@
         </div>
       </div>
       <div class="my-3">
+
+        <a href="javascript:void(0);" class="recommend btn btn-sm btn-outline-secondary"
+           th:data-uri="@{|/question/vote/${question.id}|}">
+          추천
+          <span class="badge rounded-pill bg-success" th:text="${#lists.size(question.voter)}"></span>
+        </a>
+        <!-- 질문의 추천 버튼을 질문의 수정 버튼 좌측에 추가 (버튼에는 추천수도 함께 보이도록) -->
+        <!-- class 속성에 "recommend"를 추가하여 자바스크립트를 사용하여 data-uri에 정의된 URL이 호출 -->
+        <!-- "추천" 버튼을 눌렀을때 확인창을 통해 사용자의 확인을 구하기 위함 -->
+
         <a th:href="@{|/question/modify/${question.id}|}" class="btn btn-sm btn-outline-secondary"
            sec:authorize="isAuthenticated()"
            th:if="${question.author != null and #authentication.getPrincipal().getUsername() == question.author.username}"
@@ -40,6 +58,13 @@
     <div class="card-body">
       <div class="card-text" style="white-space: pre-line;" th:text="${answer.content}"></div>
       <div class="d-flex justify-content-end">
+
+        <div th:if="${answer.modifyDate != null}" class="badge bg-light text-dark p-2 text-start mx-3">
+          <div class="mb-2">modified at</div>
+          <div th:text="${#temporals.format(answer.modifyDate, 'yyyy-MM-dd HH:mm')}"></div>
+        </div>
+        <!-- 질문 상세 화면에서 답변 수정일시 확인 (작성일시 왼쪽에 수정일시 추가) -->
+
         <div class="badge bg-light text-dark p-2 text-start">
           <div class="mb-2">
             <span th:if="${answer.author != null}" th:text="${answer.author.username}"></span>
@@ -49,6 +74,16 @@
       </div>
 
       <div class="my-3">
+
+        <a href="javascript:void(0);" class="recommend btn btn-sm btn-outline-secondary"
+           th:data-uri="@{|/answer/vote/${answer.id}|}">
+          추천
+          <span class="badge rounded-pill bg-success" th:text="${#lists.size(answer.voter)}"></span>
+        </a>
+        <!-- 답변을 추천할 수 있는 버튼 생성 -->
+        <!-- class="recommend"가 적용되어 있으므로 추천 버튼을 클릭하면 "정말로 추천하시겠습니까?"라는 질문이 나타나고
+             "확인"을 선택하면 data-uri 속성에 정의한 URL이 호출 -->
+
         <a th:href="@{|/answer/modify/${answer.id}|}" class="btn btn-sm btn-outline-secondary"
            sec:authorize="isAuthenticated()"
            th:if="${answer.author != null and #authentication.getPrincipal().getUsername() == answer.author.username}"
@@ -79,6 +114,7 @@
     <input type="submit" value="답변등록" class="btn btn-primary my-2">
   </form>
 </div>
+
 <script layout:fragment="script" type='text/javascript'>
   const delete_elements = document.getElementsByClassName("delete");
   Array.from(delete_elements).forEach(function(element) {
@@ -88,6 +124,19 @@
       };
     });
   });
+
+  const recommend_elements = document.getElementsByClassName("recommend");
+  Array.from(recommend_elements).forEach(function(element) {
+    element.addEventListener('click', function() {
+      if(confirm("정말로 추천하시겠습니까?")) {
+        location.href = this.dataset.uri;
+      };
+    });
+  });
 </script>
 <!-- 질문을 삭제할 수 있는 자바스크립트 작성 -->
+
+<!-- <추천> 버튼을 클릭했을 때 '정말로 추천하시겠습니까?'라는 확인 창 -->
+<!-- 추천 버튼에 class="recommend"가 적용되어 있으므로 추천 버튼을 클릭하면 "정말로 추천하시겠습니까?"라는 질문이 나타나고
+      "확인"을 선택하면 data-uri 속성에 정의한 URL이 호출 -->
 </html>

@@ -1,13 +1,11 @@
 package com.mysite.sbb.answer;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 import com.mysite.sbb.user.SiteUser;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 
 import com.mysite.sbb.question.Question;
@@ -43,5 +41,8 @@ public class Answer {
     private SiteUser author;  //  Question과 Answer 엔티티에 "글쓴이" 항목
 
     private LocalDateTime modifyDate;  // 질문이나 답변 수정 일시
+
+    @ManyToMany
+    Set<SiteUser> voter;
 
 }

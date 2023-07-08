@@ -64,4 +64,10 @@ public class QuestionService {
     }
     // 질문 데이터를 삭제하는 delete 메서드
 
+    public void vote(Question question, SiteUser siteUser) {
+        question.getVoter().add(siteUser);
+        this.questionRepository.save(question);
+    }
+    // Question 엔티티에 사용자를 추천인으로 저장하는 vote 메서드
+
 }

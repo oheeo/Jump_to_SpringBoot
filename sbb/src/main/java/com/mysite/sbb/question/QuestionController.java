@@ -54,6 +54,8 @@ public class QuestionController {
         return "question_detail";
     }
 
+    // 로그인이 필요한 메서드들에 @PreAuthorize("isAuthenticated()") 애너테이션을 적용해서
+    // 로그아웃 상태에서 호출되면 로그인 페이지로 이동 (예, 로그아웃 상태로 답글 달 때)
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/create")
     public String questionCreate(QuestionForm questionForm) {
@@ -118,6 +120,17 @@ public class QuestionController {
     // 로그인한 사용자와 질문 작성자가 동일할 경우 delete 메서드로 질문을 삭제
     // 질문 데이터 삭제후에는 질문 목록 화면으로 돌아갈 수 있도록 루트 페이지로 리다이렉트
 
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/vote/{id}")
+    public String questionVote(Principal principal, @PathVariable("id") Integer id) {
+        Question question = this.questionService.getQuestion(id);
+        SiteUser siteUser = this.userService.getUser(principal.getName());
+        this.questionService.vote(question, siteUser);
+        return String.format("redirect:/question/detail/%s", id);
+    }
+    // 추천 버튼을 눌렀을때 호출되는 URL을 처리하기 위해
+    // 추천은 로그인한 사람만 가능해야 하므로 @PreAuthorize("isAuthenticated()") 애너테이션이 적용
+    // vote 메서드를 호출하여 추천인을 저장
+    // 오류가 없다면 질문 상세화면으로 리다이렉트
+
 }
-// 로그인이 필요한 메서드들에 @PreAuthorize("isAuthenticated()") 애너테이션을 적용해서
-// 로그아웃 상태에서 호출되면 로그인 페이지로 이동 (예, 로그아웃 상태로 답글 달 때)

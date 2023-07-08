@@ -49,4 +49,10 @@ public class AnswerService {
     }
     // Answer 객체를 사용하여 답변을 삭제하는 delete 메서드
 
+    public void vote(Answer answer, SiteUser siteUser) {
+        answer.getVoter().add(siteUser);
+        this.answerRepository.save(answer);
+    }
+    // Answer 엔티티에 사용자를 추천인으로 저장하는 vote 메서드
+
 }
