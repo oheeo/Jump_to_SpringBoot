@@ -59,4 +59,9 @@ public class QuestionService {
     }
     // 질문 데이터를 수정할수 있는 modify 메서드
 
+    public void delete(Question question) {
+        this.questionRepository.delete(question);
+    }
+    // 질문 데이터를 삭제하는 delete 메서드
+
 }

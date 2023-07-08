@@ -104,6 +104,20 @@ public class QuestionController {
     // questionForm의 데이터를 검증하고 로그인한 사용자와 수정하려는 질문의 작성자가 동일한지도 검증
     // 통과되면 QuestionService에서 작성한 modify 메서드를 호출하여 질문 데이터를 수정 후 질문 상세 화면 다시 호출
 
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/delete/{id}")
+    public String questionDelete(Principal principal, @PathVariable("id") Integer id) {
+        Question question = this.questionService.getQuestion(id);
+        if (!question.getAuthor().getUsername().equals(principal.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
+        }
+        this.questionService.delete(question);
+        return "redirect:/";
+    }
+    // URL로 전달받은 id값을 사용하여 Question 데이터를 조회한 후
+    // 로그인한 사용자와 질문 작성자가 동일할 경우 delete 메서드로 질문을 삭제
+    // 질문 데이터 삭제후에는 질문 목록 화면으로 돌아갈 수 있도록 루트 페이지로 리다이렉트
+
 }
 // 로그인이 필요한 메서드들에 @PreAuthorize("isAuthenticated()") 애너테이션을 적용해서
 // 로그아웃 상태에서 호출되면 로그인 페이지로 이동 (예, 로그아웃 상태로 답글 달 때)
