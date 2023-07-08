@@ -37,13 +37,18 @@ public class QuestionController {
 
     @GetMapping("/list")
 //    @ResponseBody  // 템플릿을 사용하기에 @ResponseBody 필요 없음
-    public String list(Model model, @RequestParam(value="page", defaultValue="0") int page) {
+    public String list(Model model, @RequestParam(value="page", defaultValue="0") int page,
+                       @RequestParam(value = "kw", defaultValue = "") String kw) {
         // Model 객체는 자바 클래스와 템플릿 간의 연결고리 역할 (Model 객체에 값을 담아두면 템플릿에서 그 값을 사용할 수 있다)
         // @RequestParam(value="page", defaultValue="0") int page
         // : http://localhost:8080/question/list?page=0 처럼 GET 방식으로 요청된 URL에서 page값을 가져오기 위해
         // URL에 페이지 파라미터 page가 전달되지 않은 경우 디폴트 값으로 0
-        Page<Question> paging = this.questionService.getList(page);
+        // 검색어에 해당하는 kw 파라미터를 추가했고 디폴트값으로 빈 문자열을 설정
+        Page<Question> paging = this.questionService.getList(page, kw);
         model.addAttribute("paging", paging);
+        model.addAttribute("kw", kw);
+        // 화면에서 입력한 검색어를 화면에 유지하기 위해 model.addAttribute("kw", kw)로 kw 값을 저장
+        // 화면에서 kw 값이 파라미터로 들어오면 해당 값으로 질문 목록이 검색되어 조회될 것
         return "question_list";  // list 메서드에서 question_list.html 템플릿 파일의 이름인 "question_list"를 리턴
     }
 
