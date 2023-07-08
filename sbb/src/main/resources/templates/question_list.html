@@ -10,6 +10,22 @@
 <!-- <link rel="stylesheet" type="text/css" th:href="@{/bootstrap.min.css}"> -->
 <html layout:decorate="~{layout}">
 <div layout:fragment="content" class="container my-3">
+
+  <div class="row my-3">
+    <div class="col-6">
+      <a th:href="@{/question/create}" class="btn btn-primary">질문 등록하기</a>
+    </div>
+    <div class="col-6">
+      <div class="input-group">
+        <input type="text" id="search_kw" class="form-control" th:value="${kw}">
+        <button class="btn btn-outline-secondary" type="button" id="btn_search">찾기</button>
+      </div>
+    </div>
+  </div>
+  <!-- <table> 태그 상단 우측에 검색어를 입력할 수 있는 텍스트창을 생성 -->
+  <!-- 맨 밑에 있던 "질문 등록하기" 버튼은 검색 창의 좌측으로 이동 -->
+  <!-- 자바 스크립트에서 이 텍스트창에 입력된 값을 읽기 위해 id 속성에 "search_kw"라는 값 추가 -->
+
   <table class="table">
     <thead class="table-dark">
     <tr class="text-center">
@@ -47,20 +63,20 @@
     <ul class="pagination justify-content-center">
       <li class="page-item" th:classappend="${!paging.hasPrevious} ? 'disabled'">
         <!-- 이전 페이지가 없으면 비활성화 -->
-        <a class="page-link"
-           th:href="@{|?page=${paging.number-1}|}">
+        <a class="page-link" href="javascript:void(0)" th:data-page="${paging.number-1}">
+        <!-- 값을 읽어 폼에 설정할 수 있도록 (검색어가 있을 경우 검색어와 페이지 번호를 함께 전송해야 하기 때문) -->
           <!-- 이전 페이지 링크 -->
           <span>이전</span>
         </a>
       </li>
       <li th:each="page: ${#numbers.sequence(0, paging.totalPages-1)}"
           th:if="${page >= paging.number-5 and page <= paging.number+5}"
-          th:classappend="${page == paging.number} ? 'active'"
-          class="page-item">
+          th:classappend="${page == paging.number} ? 'active'" class="page-item">
         <!-- 페이지 리스트가 현재 페이지 기준으로 좌우 5개씩 보이도록 -->
         <!-- 페이지 리스트 루프 -->
         <!-- 현재 페이지와 같으면 active 적용 -->
-        <a th:text="${page}" class="page-link" th:href="@{|?page=${page}|}"></a>
+        <a th:text="${page}" class="page-link" href="javascript:void(0)" th:data-page="${page}"></a>
+        <!-- 값을 읽어 폼에 설정할 수 있도록 (검색어가 있을 경우 검색어와 페이지 번호를 함께 전송해야 하기 때문) -->
       </li>
       <li class="page-item" th:classappend="${!paging.hasNext} ? 'disabled'">
         <!-- 다음 페이지가 없으면 비활성화 -->
@@ -75,6 +91,14 @@
   <!-- 페이지 리스트를 루프 돌면서 해당 페이지로 이동할 수 있는 링크 생성
           이때 루프 도중의 페이지가 현재 페이지와 같을 경우 active 클래스 적용하여 강조표시 -->
   <!-- 페이징처리 끝 -->
-  <a th:href="@{/question/create}" class="btn btn-primary">질문 등록하기</a>
+
+  <form th:action="@{/question/list}" method="get" id="searchForm">
+    <input type="hidden" id="kw" name="kw" th:value="${kw}">
+    <input type="hidden" id="page" name="page" th:value="${paging.number}">
+  </form>
+  <!-- page와 kw를 동시에 GET으로 요청 -->
+  <!-- GET 방식으로 요청해야 하므로 method 속성에 "get"을 설정 -->
+  <!-- kw와 page는 이전에 요청했던 값을 기억하고 있어야 하므로 value에 값을 유지할수 있도록 함 -->
+  <!-- action 속성은 "폼이 전송되는 URL"이므로 질문 목록 URL인 /question/list를 지정 -->
 </div>
 </html>
