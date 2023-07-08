@@ -80,7 +80,8 @@
       </li>
       <li class="page-item" th:classappend="${!paging.hasNext} ? 'disabled'">
         <!-- 다음 페이지가 없으면 비활성화 -->
-        <a class="page-link" th:href="@{|?page=${paging.number+1}|}">
+        <a class="page-link" href="javascript:void(0)" th:data-page="${paging.number+1}">
+        <!-- 값을 읽어 폼에 설정할 수 있도록 (검색어가 있을 경우 검색어와 페이지 번호를 함께 전송해야 하기 때문) -->
           <!-- 다음 페이지 링크 -->
           <span>다음</span>
         </a>
@@ -101,4 +102,26 @@
   <!-- kw와 page는 이전에 요청했던 값을 기억하고 있어야 하므로 value에 값을 유지할수 있도록 함 -->
   <!-- action 속성은 "폼이 전송되는 URL"이므로 질문 목록 URL인 /question/list를 지정 -->
 </div>
+
+<script layout:fragment="script" type='text/javascript'>
+  const page_elements = document.getElementsByClassName("page-link");
+  Array.from(page_elements).forEach(function(element) {
+    element.addEventListener('click', function() {
+      document.getElementById('page').value = this.dataset.page;
+      document.getElementById('searchForm').submit();
+    });
+  });
+  const btn_search = document.getElementById("btn_search");
+  btn_search.addEventListener('click', function() {
+    document.getElementById('kw').value = document.getElementById('search_kw').value;
+    document.getElementById('page').value = 0;  // 검색버튼을 클릭할 경우 0페이지부터 조회한다.
+    document.getElementById('searchForm').submit();
+  });
+</script>
+<!-- page, kw 파라미터를 동시에 요청할 수 있는 자바스크립트 -->
+<!-- class 속성값으로 "page-link"라는 값을 가지고 있는 링크를 클릭하면,
+     이 링크의 data-page 속성값을 읽어 searchForm의 page 필드에 설정하여 searchForm을 요청 -->
+<!-- 검색버튼을 클릭하면 검색어 텍스트창에 입력된 값을 searchForm의 kw 필드에 설정하여 searchForm을 요청 -->
+<!-- 검색버튼을 클릭하는 경우는 새로운 검색에 해당되므로 page에 항상 0을 설정하여 첫 페이지로 요청 -->
+
 </html>

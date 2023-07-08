@@ -60,7 +60,10 @@ public class QuestionService {
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
         Specification<Question> spec = search(kw);
         return this.questionRepository.findAll(spec, pageable);
+//        return this.questionRepository.findAllByKeyword(kw, pageable);
     }
+        // QuestionRepository에서 추가한 findAllByKeyword 메서드를 사용하기 위해 수정함
+        // Specification을 사용할때와 동일하게 동작
     // 질문 목록 페이징
     // 정수 타입의 페이지번호를 입력받아 해당 페이지의 질문 목록을 리턴
     // PageRequest.of(page, 10)에서 page는 조회할 페이지의 번호, 10은 한 페이지에 보여줄 게시물의 갯수
