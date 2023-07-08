@@ -27,6 +27,7 @@ public class AnswerService {
     }
     // create 메서드에 SiteUser 객체를 추가로 전달받아 답변 저장시 author 속성에 세팅함
     // 답변을 작성하면 작성자도 함께 저장
+    // 컨트롤러에서 답변이 등록된 위치로 이동하기 위한 답변 객체
 
     public Answer getAnswer(Integer id) {
         Optional<Answer> answer = this.answerRepository.findById(id);
