@@ -29,7 +29,7 @@ public interface QuestionRepository extends JpaRepository<Question, Integer> {
 
     Page<Question> findAll(Specification<Question> spec, Pageable pageable);
     // 검색 기능
-    // Specification과 Pageable 객체를 입력으로 Question 엔티티를 조회하는 findAll 메서드를 선언
+    // Specification 과 Pageable 객체를 입력으로 Question 엔티티를 조회하는 findAll 메서드를 선언
 
     @Query("select "
             + "distinct q "
