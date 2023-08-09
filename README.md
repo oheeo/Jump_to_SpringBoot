@@ -1,17 +1,13 @@
-<h2 align="center">💻 Jump to SpringBoot 💻</h2>
-<br>
-<p align="center">스프링부트를 이용한 게시판 만들기</p>
-<P align="center"><img style="height:18px;" src="https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=HTML5&logoColor=white"/>
-  <img style="height:18px;" src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=JavaScript&logoColor=black"/>
-  <img style="height:18px;" src="https://img.shields.io/badge/Java-007396?style=for-the-badge&logo=java&logoColor=white">
-  <img style="height:18px;" src="https://img.shields.io/badge/Springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">
-  <img style="height:18px;" src="https://img.shields.io/badge/Bootstrap-7952B3?style=flat-square&logo=Bootstrap&logoColor=white"/>
-  <img style="height:18px;" src="https://img.shields.io/badge/Gradle-02303A?style=for-the-badge&logo=gradle&logoColor=white">
-  <img style="height:18px;" src="https://img.shields.io/badge/Thymeleaf-005F0F?style=for-the-badge&logo=git&logoColor=white">
-  <img style="height:18px;" src="https://img.shields.io/badge/Junit5-25A162?style=for-the-badge&logo=git&logoColor=white">
-</P>
+<h2 align="center">스프링부트를 이용한 게시판 만들기</h2>
 
-<br>
+### 프로젝트 기간
+2023.07.06 ~ 2023.07.08
+
+### 목적
+스프링부트를 이용해서 게시판 서비스를 만들었습니다.
+
+### 인원 구성
+혼자 진행했습니다.
 
 ### 기능
 - 회원가입
@@ -26,4 +22,30 @@
 - 네비게이션 바
 - 게시글 목록 페이징
 - 답변 개수 표시
+- 스프링 시큐리티를 통한 보안
 - 마크다운
+
+### 사용 기술
+- JAVA 17
+- Spring Boot 3
+- Gradle
+- Lombok
+- Bootstrap
+- Spring Security
+- Thymeleaf
+- JPA
+- H2
+- Junit
+- Spring Data JPA
+
+<br>
+
+#### 게시판 목록
+<img src="https://github.com/oheeo/Jump_to_SpringBoot/assets/122732781/df2d61cf-7c03-4476-ab9c-bf5b5090ef5f">
+
+#### 게시물
+<img src="https://github.com/oheeo/Jump_to_SpringBoot/assets/122732781/703c4bd3-c3e0-4e07-8a89-1aa344a25c32">
+
+#### H2 데이터페이스 Table
+<img src="https://github.com/oheeo/Jump_to_SpringBoot/assets/122732781/0cee5d18-88d8-4ff9-9609-7c6c11cd029a">
+
