@@ -1,5 +1,7 @@
 <h2 align="center">스프링부트를 이용한 게시판 만들기</h2>
 
+![게시판](https://github.com/oheeo/Jump_to_SpringBoot/assets/122732781/9238abea-118e-42ae-b0d2-eb9b988ed858)
+
 ### 프로젝트 기간
 2023.07.06 ~ 2023.07.08
 
